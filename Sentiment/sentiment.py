@@ -15,14 +15,14 @@ input_files = []
 
 for i in range(1, len(sys.argv) - 1):
     f = open(sys.argv[i], "r")
-    input_files.append(f.read().split())
+    input_files.append(f.read().split('\n'))
 
 k = int(sys.argv[len(sys.argv) - 1])
 
 # Create dictionary of features
 features = {}
 for i in range(k):
-    features[input_files[2][i]] = i;
+    features[input_files[2][i]] = i + 1;
 
 training_vectors = []
 current_vector = []
@@ -31,7 +31,7 @@ current_vector = []
 for i in range(len(input_files[0])):
     token = input_files[0][i]
     # If the token is the beginning of a sentence
-    if string_is_int(token):
+    if string_is_int(token) and (i == 0 or input_files[0][i - 1] == ''):
         # If there was a previous vector being built
         if len(current_vector) > 0:
             training_vectors.append(current_vector)
@@ -43,7 +43,7 @@ for i in range(len(input_files[0])):
     else:
         if token in features:
             # Count the token
-            current_vector[features[token] + 1] = 1
+            current_vector[features[token]] = 1
 
 if len(current_vector) > 0:
     training_vectors.append(current_vector)
