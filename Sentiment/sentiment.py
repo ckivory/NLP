@@ -19,53 +19,42 @@ features = {}
 for i in range(k):
     features[words[i]] = i + 1;
 
-vectors = []
-current_vector = []
+def generate_vectors_from_filename(filename):
+    vectors = []
+    current_vector = []
+    file = open(filename, "r").read().split('\n')
+    # For every token in the training file
+    for i in range(len(file)):
+        token = file[i]
+        # If the token is the beginning of a sentence
+        if string_is_int(token) and (i == 0 or file[i - 1] == ''):
+            # If there was a previous vector being built
+            if len(current_vector) > 0:
+                vectors.append(current_vector)
+            # Create zero vector to begin adding to
+            current_vector = [int(token)]
+            for j in range(len(features)):
+                current_vector.append(0)
+        # If the token is a normal string
+        else:
+            if token in features:
+                # Count the token
+                current_vector[features[token]] = 1
 
-filename = sys.argv[1]
-file = open(filename, "r").read().split('\n')
-# For every token in the training file
-for i in range(len(file)):
-    token = file[i]
-    # If the token is the beginning of a sentence
-    if string_is_int(token) and (i == 0 or file[i - 1] == ''):
-        # If there was a previous vector being built
-        if len(current_vector) > 0:
-            vectors.append(current_vector)
-        # Create zero vector to begin adding to
-        current_vector = [int(token)]
-        for j in range(len(features)):
-            current_vector.append(0)
-    # If the token is a normal string
-    else:
-        if token in features:
-            # Count the token
-            current_vector[features[token]] = 1
+    if len(current_vector) > 0:
+        vectors.append(current_vector)
 
-if len(current_vector) > 0:
-    vectors.append(current_vector)
+    filename += ".vector"
+    f = open(filename, "w")
+    for i in range(len(vectors)):
 
-filename += ".vector"
-f = open(filename, "w")
-for i in range(len(vectors)):
+        vector_string = str(vectors[i][0])
+        for j in range(1, len(vectors[i])):
+            if vectors[i][j] > 0:
+                vector_string += " " + str(j) + ":" + str(vectors[i][j])
+        if len(vector_string) == 1:
+            vector_string += " "
+        f.write(vector_string + "\n")
 
-    if i == 0:
-        sentence = "Sentence: "
-        j = i + 1
-        while not string_is_int(file[j]):
-            sentence += " " + file[j]
-            j += 1
-        print(sentence)
-        print("Label: " + str(vectors[i][0]))
-
-    vector_string = str(vectors[i][0])
-    for j in range(1, len(vectors[i])):
-        if vectors[i][j] > 0:
-
-            if i == 0:
-                print("Feature: " + list(features.keys())[j] + " Exists: " + str(vectors[i][j]))
-
-            vector_string += " " + str(j) + ":" + str(vectors[i][j])
-    if len(vector_string) == 1:
-        vector_string += " "
-    f.write(vector_string + "\n")
+generate_vectors_from_filename(sys.argv[1])
+generate_vectors_from_filename(sys.argv[2])
