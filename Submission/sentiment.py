@@ -1,25 +1,23 @@
 import sys
 
-# Santize inputs
-if len(sys.argv) != 4 + 1:
-    raise Exception("Please provide the training, testing, and feature documents, and k")
-
-# Set global variables
-k = int(sys.argv[len(sys.argv) - 1])
-words = open(sys.argv[3], "r").read().split('\n')
-
-features = {}
-for i in range(k):
-    features[words[i]] = i + 1;
-
-
-# Helper function
 def string_is_int(test_string):
     try:
         int(test_string)
         return True
     except ValueError:
         return False
+
+
+if len(sys.argv) != 4 + 1:
+    raise Exception("Please provide the training, testing, and feature documents, and k")
+
+k = int(sys.argv[len(sys.argv) - 1])
+
+# Create dictionary of features
+words = open(sys.argv[3], "r").read().split('\n')
+features = {}
+for i in range(k):
+    features[words[i]] = i + 1;
 
 def generate_vectors_from_filename(filename):
     vectors = []
