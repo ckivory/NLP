@@ -305,8 +305,6 @@ class FileProcessor:
                     else:
                         current_vector[self.cap_index] = 0
 
-                self.vectors.append(current_vector)
-
                 # Set values for WORDCON
                 if "WORDCON" in self.selected_ftypes:
                     if prev_word == "PHI":
@@ -326,7 +324,7 @@ class FileProcessor:
                         current_vector[self.next_word_features[next_word]] = 1
 
                 # Set values for POSCON
-                if "WORDCON" in self.selected_ftypes:
+                if "POSCON" in self.selected_ftypes:
                     if prev_pos == "PHIPOS":
                         current_vector[self.phipos_index] = 1
                     elif prev_pos not in self.prev_pos_features:
@@ -342,6 +340,8 @@ class FileProcessor:
                         current_vector[self.nextpos_unk_index] = 1
                     else:
                         current_vector[self.next_pos_features[next_pos]] = 1
+
+                self.vectors.append(current_vector)
 
                 if "POS" in self.selected_ftypes:
                     ftype_values["POS"] = tokens[1]
