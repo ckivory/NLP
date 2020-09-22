@@ -82,14 +82,7 @@ class FileProcessor:
         self.vectors = []
         file_length = len(file)
 
-        print("\nProcessing " + filename)
-        print("Length: " + str(file_length))
-
         for line_index in range(file_length):
-
-            if line_index % 1000 == 0 or line_index == 31669:
-                print("Progress: " + str(line_index) + "/" + str(file_length))
-
             line = file[line_index]
             tokens = line.split()
             if line != '' and len(tokens) > 0:
@@ -103,63 +96,63 @@ class FileProcessor:
 
                 if "WORDCON" in self.selected_ftypes:
                     # Find previous
-                    prev_word = ""
+                    prev_words = []
                     if len(self.vectors) > 0:
                         prev_index = line_index - 1
                         prev = file[prev_index]
                         if len(prev.split()) == 3:
                             prev_tokens = prev.split()
-                            prev_word = prev_tokens[2]
+                            prev_words.append(prev_tokens[2])
                         else:
-                            prev_word = "PHI"
+                            prev_words.append("PHI")
                     else:
-                        prev_word = "PHI"
+                        prev_words.append("PHI")
 
                     # Find next
-                    next_word = ""
+                    next_words = []
                     if line_index < len(file) - 1:
                         next_index = line_index + 1
                         next_line = file[next_index]
                         if len(next_line.split()) == 3:
                             next_tokens = next_line.split()
-                            next_word = next_tokens[2]
+                            next_words.append(next_tokens[2])
                         else:
-                            next_word == "OMEGA"
+                            next_words.append("OMEGA")
                     else:
-                        next_word = "OMEGA"
+                        next_words.append("OMEGA")
                     # Strange bug where next_word is not set even though it should be
-                    if next_word == "":
-                        next_word = "OMEGA"
+                    if len(next_words) < 1:
+                        next_words.append("OMEGA")
 
                 if "POSCON" in self.selected_ftypes:
                     # Find previous
-                    prev_pos = ""
+                    prev_pos_list = []
                     if len(self.vectors) > 0:
                         prev_index = line_index - 1
                         prev = file[prev_index]
                         if len(prev.split()) == 3:
                             prev_tokens = prev.split()
-                            prev_pos = prev_tokens[1]
+                            prev_pos_list.append(prev_tokens[1])
                         else:
-                            prev_pos = "PHIPOS"
+                            prev_pos_list.append("PHIPOS")
                     else:
-                        prev_pos = "PHIPOS"
+                        prev_pos_list.append("PHIPOS")
 
                     # Find next
-                    next_pos = ""
+                    next_pos_list = []
                     if line_index < len(file) - 1:
                         next_index = line_index + 1
                         next_line = file[next_index]
                         if len(next_line.split()) == 3:
                             next_tokens = next_line.split()
-                            next_pos = next_tokens[1]
+                            next_pos_list.append(next_tokens[1])
                         else:
-                            next_pos == "OMEGAPOS"
+                            next_pos_list.append("OMEGAPOS")
                     else:
-                        next_pos = "OMEGAPOS"
+                        next_pos_list.append("OMEGAPOS")
                     # Strange bug where next_word is not set even though it should be
-                    if next_pos == "":
-                        next_pos = "OMEGAPOS"
+                    if len(next_pos_list) < 1:
+                        next_pos_list.append("OMEGAPOS")
 
                 # Define features
                 if training:
@@ -224,41 +217,41 @@ class FileProcessor:
                         self.word_features[tokens[2]] = self.feature_number
 
                     if "WORDCON" in self.selected_ftypes:
-                        if not (prev_word == "UNK" or prev_word == "PHI"):
-                            if prev_word not in self.prev_word_features:
+                        if not (prev_words[0] == "UNK" or prev_words[0] == "PHI"):
+                            if prev_words[0] not in self.prev_word_features:
                                 self.feature_number += 1
-                                self.prev_word_features[prev_word] = self.feature_number
-                        if not (next_word == "UNK" or next_word == "OMEGA"):
-                            if next_word not in self.next_word_features:
+                                self.prev_word_features[prev_words[0]] = self.feature_number
+                        if not (next_words[0] == "UNK" or next_words[0] == "OMEGA"):
+                            if next_words[0] not in self.next_word_features:
                                 self.feature_number += 1
-                                self.next_word_features[next_word] = self.feature_number
+                                self.next_word_features[next_words[0]] = self.feature_number
 
                         # Make sure not to miss beginning and end
-                        if prev_word == "PHI":
+                        if prev_words[0] == "PHI":
                             if tokens[2] not in self.next_word_features:
                                 self.feature_number += 1
                                 self.next_word_features[tokens[2]] = self.feature_number
-                        if next_word == "OMEGA":
+                        if next_words[0] == "OMEGA":
                             if tokens[2] not in self.prev_word_features:
                                 self.feature_number += 1
                                 self.prev_word_features[tokens[2]] = self.feature_number
 
                     if "POSCON" in self.selected_ftypes:
-                        if not (prev_pos == "UNKPOS" or prev_pos == "PHIPOS"):
-                            if prev_pos not in self.prev_pos_features:
+                        if not (prev_pos_list[0] == "UNKPOS" or prev_pos_list[0] == "PHIPOS"):
+                            if prev_pos_list[0] not in self.prev_pos_features:
                                 self.feature_number += 1
-                                self.prev_pos_features[prev_pos] = self.feature_number
-                        if not (next_pos == "UNKPOS" or next_pos == "OMEGAPOS"):
-                            if next_pos not in self.next_pos_features:
+                                self.prev_pos_features[prev_pos_list[0]] = self.feature_number
+                        if not (next_pos_list[0] == "UNKPOS" or next_pos_list[0] == "OMEGAPOS"):
+                            if next_pos_list[0] not in self.next_pos_features:
                                 self.feature_number += 1
-                                self.next_pos_features[next_pos] = self.feature_number
+                                self.next_pos_features[next_pos_list[0]] = self.feature_number
 
                         # Make sure not to miss beginning and end
-                        if prev_pos == "PHIPOS":
+                        if prev_pos_list[0] == "PHIPOS":
                             if tokens[1] not in self.next_pos_features:
                                 self.feature_number += 1
                                 self.next_pos_features[tokens[1]] = self.feature_number
-                        if next_pos == "OMEGA":
+                        if next_pos_list[0] == "OMEGA":
                             if tokens[1] not in self.prev_pos_features:
                                 self.feature_number += 1
                                 self.prev_pos_features[tokens[1]] = self.feature_number
@@ -307,39 +300,39 @@ class FileProcessor:
 
                 # Set values for WORDCON
                 if "WORDCON" in self.selected_ftypes:
-                    if prev_word == "PHI":
+                    if prev_words[0] == "PHI":
                         current_vector[self.phi_index] = 1
-                    elif prev_word not in self.prev_word_features:
-                        prev_word = "UNK"
+                    elif prev_words[0] not in self.prev_word_features:
+                        prev_words[0] = "UNK"
                         current_vector[self.prev_unk_index] = 1
                     else:
-                        current_vector[self.prev_word_features[prev_word]] = 1
+                        current_vector[self.prev_word_features[prev_words[0]]] = 1
 
-                    if next_word == "OMEGA":
+                    if next_words[0] == "OMEGA":
                         current_vector[self.omega_index] = 1
-                    elif next_word not in self.next_word_features:
-                        next_word = "UNK"
+                    elif next_words[0] not in self.next_word_features:
+                        next_words[0] = "UNK"
                         current_vector[self.next_unk_index] = 1
                     else:
-                        current_vector[self.next_word_features[next_word]] = 1
+                        current_vector[self.next_word_features[next_words[0]]] = 1
 
                 # Set values for POSCON
                 if "POSCON" in self.selected_ftypes:
-                    if prev_pos == "PHIPOS":
+                    if prev_pos_list[0] == "PHIPOS":
                         current_vector[self.phipos_index] = 1
-                    elif prev_pos not in self.prev_pos_features:
-                        prev_pos = "UNKPOS"
+                    elif prev_pos_list[0] not in self.prev_pos_features:
+                        prev_pos_list[0] = "UNKPOS"
                         current_vector[self.prevpos_unk_index] = 1
                     else:
-                        current_vector[self.prev_pos_features[prev_pos]] = 1
+                        current_vector[self.prev_pos_features[prev_pos_list[0]]] = 1
 
-                    if next_pos == "OMEGAPOS":
+                    if next_pos_list[0] == "OMEGAPOS":
                         current_vector[self.omegapos_index] = 1
-                    elif next_pos not in self.next_pos_features:
-                        next_pos = "UNKPOS"
+                    elif next_pos_list[0] not in self.next_pos_features:
+                        next_pos_list[0] = "UNKPOS"
                         current_vector[self.nextpos_unk_index] = 1
                     else:
-                        current_vector[self.next_pos_features[next_pos]] = 1
+                        current_vector[self.next_pos_features[next_pos_list[0]]] = 1
 
                 self.vectors.append(current_vector)
 
@@ -350,9 +343,9 @@ class FileProcessor:
                 if "CAP" in self.selected_ftypes:
                     ftype_values["CAP"] = "yes" if current_vector[self.cap_index] > 0 else "no"
                 if "WORDCON" in self.selected_ftypes:
-                    ftype_values["WORDCON"] = prev_word + " " + next_word
+                    ftype_values["WORDCON"] = prev_words[0] + " " + next_words[0]
                 if "POSCON" in self.selected_ftypes:
-                    ftype_values["POSCON"] = prev_pos + " " + next_pos
+                    ftype_values["POSCON"] = prev_pos_list[0] + " " + next_pos_list[0]
 
                 for i in range(len(list(ftype_values))):
                     ftype = list(ftype_values.keys())[i]
@@ -360,16 +353,10 @@ class FileProcessor:
                     if i < len(list(ftype_values)) - 1:
                         readable_file.write("\n")
 
-        print("Writing vector file for " + filename)
-
         # Write vector files
         file
         f = open(filename + ".vector", "w")
         for i in range(len(self.vectors)):
-
-            if i % 1000 == 0 or i == 31669:
-                print("Progress: " + str(i) + "/" + str(len(self.vectors)))
-
             vector_string = str(self.vectors[i][0])
             key_list = sorted(list(self.vectors[i].keys()))
             ascending = True
