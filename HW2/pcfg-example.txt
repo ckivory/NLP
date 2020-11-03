@@ -1,0 +1,25 @@
+S -> NP VP   .20
+S -> VERB NP .70
+S -> X2 PP   .60
+S -> VERB PP .30
+S -> VP PP   .18
+S -> book    .16
+VP -> VERB NP .50
+VP -> X2 PP   .20
+X2 -> VERB NP .80
+VP -> VERB PP .50
+VP -> VP PP   .25
+VP -> book    .20
+NP -> DET NOM .60
+NP -> Houston .14
+NOM -> NOM NN .15
+NOM -> NOM PP .40
+NOM -> book   .12
+NOM -> flight .30
+PP -> PREP NP .90
+DET -> the    .50 
+NN -> book    .20
+NN -> flight  .30
+VERB -> book  .60
+PREP -> to    .50
+PROPER -> Houston .09

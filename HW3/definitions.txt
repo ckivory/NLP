@@ -1,0 +1,6 @@
+phone	a telephone connection	the line went dead
+text	text consisting of a row of words written across a page or computer screen	the letter consisted of three short lines
+product	a particular kind of product or merchandise	a nice line of shoes
+cord	something ( as a cord or rope ) that is long and thin and flexible	a washing line
+formation	a formation of people or things one behind another	you must wait in a long line at the checkout counter
+division	an abstract division	a line between good and evil
