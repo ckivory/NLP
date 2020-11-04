@@ -43,7 +43,11 @@ for line in story_lines:
         print("Word: " + entry[0] + "\t\tTag: " + entry[1])
 
 
-# TODO: Create a grammar that can identify potential answers to different 'wh' questions
-# TODO: Create an algorithm that ranks story sentences by their similarity to the question
-# TODO: Create a way to determine the most likely answer by selecting a phrase that is compatible with the grammar from
-#   the sentences that are most similar to the question. Figure out how to use training data to determine best phrase
+# TODO: Create a function that can return the dot product similarity of the question and each potential answer
+#   1. Create vocabulary based on words from story (and questions and answers?). Frequency of two or higher.
+#   2. Create context vector of question and phrase in story, probably given a start and end index of the phrase.
+#   3. Create dictionary indexed by vocab_index of each word, pointing to frequency in context window.
+#   4. Return dot-product similarity.
+
+# TODO: (Partner) Create an algorithm that returns every phrase of a given type from a list of sentences given a grammar
+# TODO: Create a grammar that can identify potential answers to different 'wh' questions    Together tomorrow
