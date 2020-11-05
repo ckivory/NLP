@@ -99,6 +99,13 @@ def word_frequency(sentence_list):
     return frequency_data
 
 
+def magnitude(vector):
+    mag = 0
+    for entry in list(vector.keys()):
+        mag += pow(vector[entry], 2)
+    return mag
+
+
 # Where question is the sentence from the questions, and story is a list of sentences from the story text
 def vector_similarity(question, story, starting_sentence_index, sentence_context_size):
 
@@ -160,10 +167,13 @@ def vector_similarity(question, story, starting_sentence_index, sentence_context
             b = answer_vector[index]
         sim += (a * b)
 
-    return sim
+    magA = magnitude(question_vector)
+    magB = magnitude(answer_vector)
+
+    return sim / (magA * magB)
 
 
-print(vector_similarity(QTexts[0], story_text_lines, 2, 1))
+print(vector_similarity(QTexts[4], story_text_lines, 5, 1))
 
 
 # TODO: Create a function that can return the dot product similarity of the question and each potential answer
