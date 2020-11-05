@@ -176,7 +176,7 @@ def vector_similarity(question, story, starting_sentence_index, sentence_context
 print(vector_similarity(QTexts[4], story_text_lines, 5, 1))
 
 
-# TODO: Create a function that can return the dot product similarity of the question and each potential answer
+# TODO: Create a function that can return the cosine similarity of the question and each potential answer
 #   1. Create vocabulary based on words from story (and questions and answers?). Frequency of two or higher.
 #   2. Create context vector of question and phrase in story, probably given a start and end index of the phrase.
 #   3. Create dictionary indexed by vocab_index of each word, pointing to frequency in context window.
