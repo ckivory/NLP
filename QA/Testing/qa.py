@@ -1,5 +1,6 @@
 import nltk
 import sys
+import math
 
 if len(sys.argv) != 4:
     raise Exception("Please provide story, questions, and answers files")
@@ -103,7 +104,8 @@ def magnitude(vector):
     mag = 0
     for entry in list(vector.keys()):
         mag += pow(vector[entry], 2)
-    return mag
+
+    return math.sqrt(mag)
 
 
 # Where question is the sentence from the questions, and story is a list of sentences from the story text
@@ -173,7 +175,7 @@ def vector_similarity(question, story, starting_sentence_index, sentence_context
     return sim / (magA * magB)
 
 
-print(vector_similarity(QTexts[4], story_text_lines, 5, 1))
+print(vector_similarity(QTexts[4], story_text_lines, 8, 1))
 
 
 # TODO: Create a function that can return the cosine similarity of the question and each potential answer
